@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+<br> <Button onclick="WebServer.Start();">WebServer.Start();</Button>
+<br> <Button onclick="WebServer.Stop();">WebServer.Stop();</Button>
+<br> <Button onclick="WebServer.StartBrowser();">WebServer.StartBrowser();</Button>
+<br> <Button onclick="Android.Reload();">Android.Reload();</Button>
+<br> <Button onclick="Android.url('http://'+Android.getIp()+':8080');">http://0.0.0.0:8080/index.html</Button>
+
+<br>----<br>
+<ifame src="http://0.0.0.0:8080/index.html"></ifame>
+<br>----<br>
+
+    <pre>
+       <div id="content" >-----</div>
+       <div id="log" >-----</div>
+    </pre>
+
+
+    <script>
+
+        /// v1
+        /// Получить список устройств в строковом виде
+        document.getElementById("content").innerHTML=Sensor.list();
+
+        /// V2
+        var SensList=null;
+        Sensor.list('SensList');
+        /// В другой функции можно обратится к 'SensList' как к объекту
+
+        /// V3
+        function ViewSensorList(SensListObj){
+          document.getElementById("log").innerHTML+="\r\n<br>"+JSON.stringify(SensListObj);
+        }
+        Sensor.list('ViewSensorList'); // Запустить асинхронно получение списка сенсоров на устройстве
+
+        /// ------------------------------------------------ \\\
+        ///   Запустить слушателя устройства (Асинхронно)    \\\
+        /// ------------------------------------------------ \\\
+
+             // Обработчик изменения состояния сенсора
+             var TestFunCalBackSensor=function(obj)
+             {
+                document.getElementById("content").innerHTML=obj;
+                document.getElementById("content").innerHTML+='\r\n<br>'+JSON.stringify(obj);
+             }
+             /// V1 запустить все устройства
+             Sensor.Start('','TestFunCalBackSensor');
+
+             /// V2 запустить одно устройство
+             // Sensor.Start('TYPE_ACCELEROMETER','TestFunCalBackSensor');
+
+             /// Получить значение по запросу пользователя
+             function GetSensor(){
+                document.getElementById("content").innerHTML= Sensor.GetSensorValue();
+             }
+        /// ------------------------------------------------ \\\
+        ///   Остановить слушателя устройства (Асинхронно)    \\\
+        /// ------------------------------------------------ \\\
+                // Sensor.Stop();                    /// остановить все устройства
+                // Sensor.Stop('TYPE_ACCELEROMETER') /// остановить одно устройство
+
+    </script>
+    <br> <Button onclick="GetSensor(); ">GetSensor()</Button>
+
+   <br>------------------------<br>
+
+
+
+
+  <div id="logPic" >----------</div>
+  <script>
+    function ResultPic(picSrc){
+       document.getElementById("pic").src=picSrc;
+    }
+    function Getpic(){
+       // V1
+       // var picSrc=Camera.GetPhoto('pic');
+       // document.getElementById("content").innerHTML= picSrc;
+
+       /// V2
+       // Camera.GetPhoto('ResultPic');
+
+       /// V3
+        Camera.GetPhoto('logPic');
+    }
+</script>
+
+<br> <Button onclick="Getpic();">Getpic()</Button>
+<br> <img src="" id="pic"/>
+<br> <img src="" id="pic2"/>
+<br> <Button onclick="document.getElementById('pic2').src=Camera.GetPhotoaImageBase64(); ">GetpicBase64()</Button>
+
+
+    <br>------------------------<br>
+    <br><img src="" id="pic3"/>
+    <script>
+
+      function ResultPic2(picSrc){
+          document.getElementById("pic").src=picSrc;
+      }
+      StartPreview=function(){
+         Camera.GetPicture('ResultPic2');
+      }
+    </script>
+    <br> <Button onclick="StartPreview();">StartPreview</Button>
+    <br>
+    <Button onclick="Camera.Stop();">Camera.Stop();</Button>
+    <Button onclick="Camera.Start(1);">Camera.Start();</Button>
+
+    <br><Button onclick="Camera.GetPreviewImage();">GetPreviewImage();</Button>
+    <br><Button onclick="Camera.GetPreviewImage('pic4');">GetPreviewImage('pic3');</Button>
+    <br> <img src="" id="pic4"/>
+    <iframe id="calendar" src="about:blank" width="1000" height="450" frameborder="0" scrolling="no"></iframe>
+    <br>------------------------<br>
+    <div id="log3" >-----</div>
+    <script>
+      function GetGPS(){
+           document.getElementById("log3").innerHTML=Gps.getLocation();
+      }
+
+      function GetGPS2(txt){
+          document.getElementById("log3").innerHTML=JSON.stringify(txt);
+      }
+      Gps.getLocation('GetGPS2');
+    </script>
+    <br> <Button onclick="GetGPS();">GetGPS</Button>
+    <br> <Button onclick="Gps.ConnectGPS();">ConnectGPS()</Button>
+
+    <div id="log5" >-----</div>
+    <script>
+           document.getElementById("log5").innerHTML=Wifi.getIp();
+    </script>
+
+</body>
+</html>
